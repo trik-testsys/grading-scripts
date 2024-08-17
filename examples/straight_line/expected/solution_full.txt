@@ -1,0 +1,4 @@
+-------- Results for ./results/straight_line/solution_full --------
+./results/straight_line/solution_full/1_square.json: 100
+./results/straight_line/solution_full/2_square.json: 100
+TOTAL: 200

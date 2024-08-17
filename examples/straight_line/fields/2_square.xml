@@ -1,0 +1,332 @@
+<?xml version='1.0' encoding='utf-8'?>
+<!--
+    Copyright 2023 Roman Shishkin
+
+    Licensed under the Apache License, Version 2.0 (the "License");
+    you may not use this file except in compliance with the License.
+    You may obtain a copy of the License at
+
+        http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing, software
+    distributed under the License is distributed on an "AS IS" BASIS,
+    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+    See the License for the specific language governing permissions and
+    limitations under the License.
+-->
+<root version="20190819">
+    <world>
+        <walls/>
+        <skittles/>
+        <balls/>
+        <colorFields>
+            <rectangle fill="#ffffffff" begin="-625.5:-0.5" end="-550.5:74.5" stroke-width="1" stroke-style="solid" id="{square1}" stroke="#ffffffff" fill-style="solid"/>
+            <rectangle fill="#ff000000" begin="-530.5:-0.5" end="-455.5:74.5" stroke-width="1" stroke-style="solid" id="{square2}" stroke="#ff000000" fill-style="solid"/>
+            <rectangle fill="#ff000000" begin="-435.5:-0.5" end="-360.5:74.5" stroke-width="1" stroke-style="solid" id="{square3}" stroke="#ff000000" fill-style="solid"/>
+            <rectangle fill="#ff32cd32" begin="-340.5:-0.5" end="-265.5:74.5" stroke-width="1" stroke-style="solid" id="{square4}" stroke="#ff32cd32" fill-style="solid"/>
+            <rectangle fill="#ff32cd32" begin="-245.5:-0.5" end="-170.5:74.5" stroke-width="1" stroke-style="solid" id="{square5}" stroke="#ff32cd32" fill-style="solid"/>
+            <rectangle fill="#ff000000" begin="-150.5:-0.5" end="-75.5:74.5" stroke-width="1" stroke-style="solid" id="{square6}" stroke="#ff000000" fill-style="solid"/>
+            <rectangle fill="#ff32cd32" begin="-55.5:-0.5" end="19.5:74.5" stroke-width="1" stroke-style="solid" id="{square7}" stroke="#ff32cd32" fill-style="solid"/>
+            <rectangle fill="#ff000000" begin="39.5:-0.5" end="114.5:74.5" stroke-width="1" stroke-style="solid" id="{square8}" stroke="#ff000000" fill-style="solid"/>
+            <rectangle fill="#ff000000" begin="134.5:-0.5" end="209.5:74.5" stroke-width="1" stroke-style="solid" id="{square9}" stroke="#ff000000" fill-style="solid"/>
+            <rectangle fill="#ff32cd32" begin="229.5:-0.5" end="304.5:74.5" stroke-width="1" stroke-style="solid" id="{square10}" stroke="#ff32cd32" fill-style="solid"/>
+            <rectangle fill="#ff32cd32" begin="324.5:-0.5" end="399.5:74.5" stroke-width="1" stroke-style="solid" id="{square11}" stroke="#ff32cd32" fill-style="solid"/>
+            <rectangle fill="#ff000000" begin="419.5:-0.5" end="494.5:74.5" stroke-width="1" stroke-style="solid" id="{square12}" stroke="#ff000000" fill-style="solid"/>
+            <rectangle fill="#ffffffff" begin="514.5:-0.5" end="589.5:74.5" stroke-width="1" stroke-style="solid" id="{square13}" stroke="#ffffffff" fill-style="solid"/>
+
+            <line fill="#ff0000ff" begin="-540.5:64.5" end="-540.5:9.5" stroke-width="21" stroke-style="solid" id="{line1}" stroke="#ff0000ff" fill-style="none"/>
+            <line fill="#ff0000ff" begin="-445.5:64.5" end="-445.5:9.5" stroke-width="21" stroke-style="solid" id="{line2}" stroke="#ff0000ff" fill-style="none"/>
+            <line fill="#ff0000ff" begin="-350.5:64.5" end="-350.5:9.5" stroke-width="21" stroke-style="solid" id="{line3}" stroke="#ff0000ff" fill-style="none"/>
+            <line fill="#ff0000ff" begin="-255.5:64.5" end="-255.5:9.5" stroke-width="21" stroke-style="solid" id="{line4}" stroke="#ff0000ff" fill-style="none"/>
+            <line fill="#ff0000ff" begin="-160.5:64.5" end="-160.5:9.5" stroke-width="21" stroke-style="solid" id="{line5}" stroke="#ff0000ff" fill-style="none"/>
+            <line fill="#ff0000ff" begin="-65.5:64.5" end="-65.5:9.5" stroke-width="21" stroke-style="solid" id="{line6}" stroke="#ff0000ff" fill-style="none"/>
+            <line fill="#ff0000ff" begin="29.5:64.5" end="29.5:9.5" stroke-width="21" stroke-style="solid" id="{line7}" stroke="#ff0000ff" fill-style="none"/>
+            <line fill="#ff0000ff" begin="124.5:64.5" end="124.5:9.5" stroke-width="21" stroke-style="solid" id="{line8}" stroke="#ff0000ff" fill-style="none"/>
+            <line fill="#ff0000ff" begin="219.5:64.5" end="219.5:9.5" stroke-width="21" stroke-style="solid" id="{line9}" stroke="#ff0000ff" fill-style="none"/>
+            <line fill="#ff0000ff" begin="314.5:64.5" end="314.5:9.5" stroke-width="21" stroke-style="solid" id="{line10}" stroke="#ff0000ff" fill-style="none"/>
+            <line fill="#ff0000ff" begin="409.5:64.5" end="409.5:9.5" stroke-width="21" stroke-style="solid" id="{line11}" stroke="#ff0000ff" fill-style="none"/>
+            <line fill="#ff0000ff" begin="504.5:64.5" end="504.5:9.5" stroke-width="21" stroke-style="solid" id="{line12}" stroke="#ff0000ff" fill-style="none"/>
+        </colorFields>
+        <images/>
+        <regions>
+            <region type="rectangle" width="75" height="75" filled="true" x="-340.5" visible="true" color="#ff0000" id="green-zone1" y="-0.5"/>
+            <region type="rectangle" width="75" height="75" filled="true" x="-245.5" visible="true" color="#ff0000" id="green-zone2" y="-0.5"/>
+            <region type="rectangle" width="75" height="75" filled="true" x="-55.5" visible="true" color="#ff0000" id="green-zone3" y="-0.5"/>
+            <region type="rectangle" width="75" height="75" filled="true" x="229.5" visible="true" color="#ff0000" id="green-zone4" y="-0.5"/>
+            <region type="rectangle" width="75" height="75" filled="true" x="324.5" visible="true" color="#ff0000" id="green-zone5" y="-0.5"/>
+
+            <region type="rectangle" width="75" height="75" filled="true" x="-530.5" visible="true" color="#ff0000" id="dead-zone1" y="-0.5"/>
+            <region type="rectangle" width="75" height="75" filled="true" x="-435.5" visible="true" color="#ff0000" id="dead-zone2" y="-0.5"/>
+            <region type="rectangle" width="75" height="75" filled="true" x="-150.5" visible="true" color="#ff0000" id="dead-zone3" y="-0.5"/>
+            <region type="rectangle" width="75" height="75" filled="true" x="39.5" visible="true" color="#ff0000" id="dead-zone4" y="-0.5"/>
+            <region type="rectangle" width="75" height="75" filled="true" x="134.5" visible="true" color="#ff0000" id="dead-zone5" y="-0.5"/>
+            <region type="rectangle" width="75" height="75" filled="true" x="419.5" visible="true" color="#ff0000" id="dead-zone6" y="-0.5"/>
+
+            <region type="rectangle" width="75" height="75" filled="true" x="-625.5" visible="true" color="#ff0000" id="start-zone" y="-0.5"/>
+            <region type="rectangle" width="75" height="75" filled="true" x="514.5" visible="true" color="#ff0000" id="end-zone" y="-0.5"/>
+        </regions>
+        <comments/>
+        <robot direction="0" position="-611.759:9.8517">
+            <startPosition direction="0" x="-588" id="{0831c4a8-3561-4639-a46d-e03bd1fbfd56}" y="37"/>
+        </robot>
+    </world>
+    <robots>
+        <robot id="ev3KitUsbRobot">
+            <sensors>
+                <sensor direction="0" type="kitBase::robotModel::robotParts::GyroscopeSensor" position="25:25" port="4###input######sensor4"/>
+                <sensor direction="0" type="kitBase::robotModel::robotParts::LightSensor" position="54:12" port="1###input######sensor1"/>
+                <sensor direction="0" type="kitBase::robotModel::robotParts::ColorSensorFull" position="27:-1" port="3###input######sensor3"/>
+                <sensor direction="0" type="kitBase::robotModel::robotParts::LightSensor" position="54:37" port="2###input######sensor2"/>
+            </sensors>
+            <wheels right="C###output###С###" left="B###output###В###"/>
+        </robot>
+        <robot id="trikKitRobot">
+            <sensors>
+                <sensor direction="0" type="" position="0:0" port="Video2Port###input######"/>
+                <sensor direction="0" type="kitBase::robotModel::robotParts::GyroscopeSensor" position="25:25" port="GyroscopePort###input######gyroscope"/>
+                <sensor direction="0" type="" position="0:0" port="A3###input###А3###sensorA3"/>
+                <sensor direction="0" type="trik::robotModel::parts::TrikLightSensor" position="27:36" port="A1###input###А1###sensorA1"/>
+                <sensor direction="0" type="" position="0:0" port="A2###input###А2###sensorA2"/>
+            </sensors>
+            <wheels right="M4###output###М4###" left="M3###output###М3###"/>
+        </robot>
+    </robots>
+    <settings realisticSensors="false" realisticMotors="false" realisticPhysics="false"/>
+    <constraints>
+        <timelimit value="120000"/>
+
+        <init>
+            <setter name="score">
+                <int value="0"/>
+            </setter>
+        </init>
+
+        <constraint checkOnce="true" failMessage="Робот должен находиться в зоне старта перед запуском!">
+            <inside objectId="robot1" regionId="start-zone"/>
+        </constraint>
+
+        <event id="finish-checker" settedUpInitially="true">
+            <conditions glue="and">
+                <inside regionId="end-zone" objectId="robot1"/>
+                <equals>
+                    <objectState object="robot1.M3.power"/>
+                    <int value="0"/>
+                </equals>
+                <equals>
+                    <objectState object="robot1.M4.power"/>
+                    <int value="0"/>
+                </equals>
+            </conditions>
+
+            <triggers>
+                <success/>
+                <message text="Набрано баллов: %text1%" >
+                    <replace var="text1">
+                        <variableValue name="score"/>
+                    </replace>
+                </message>
+            </triggers>
+        </event>
+
+        <event id="finish-checker2" settedUpInitially="true">
+            <conditions glue="and">
+                <timer timeout="100" forceDropOnTimeout="false"/>
+                <not>
+                    <inside regionId="end-zone" objectId="robot1" objectPoint="all"/>
+                </not>
+                <not>
+                    <inside regionId="green-zone1" objectId="robot1" objectPoint="all"/>
+                </not>
+                <not>
+                    <inside regionId="green-zone2" objectId="robot1" objectPoint="all"/>
+                </not>
+                <not>
+                    <inside regionId="green-zone3" objectId="robot1" objectPoint="all"/>
+                </not>
+                <not>
+                    <inside regionId="green-zone4" objectId="robot1" objectPoint="all"/>
+                </not>
+                <not>
+                    <inside regionId="green-zone5" objectId="robot1" objectPoint="all"/>
+                </not>
+                <equals>
+                    <objectState object="robot1.M3.power"/>
+                    <int value="0"/>
+                </equals>
+                <equals>
+                    <objectState object="robot1.M4.power"/>
+                    <int value="0"/>
+                </equals>
+            </conditions>
+
+            <triggers>
+                <setter name="score">
+                    <int value="0"/>
+                </setter>
+                <fail message="Робот остановился вне зоны финиша или зеленой зоны. Задание не выполнено. Набрано баллов: 0"/>
+            </triggers>
+        </event>
+
+        <event id="green-zone-checker1" settedUpInitially="true" dropOnFire="true">
+            <conditions glue="and">
+                <inside regionId="green-zone1" objectId="robot1" objectPoint="all"/>
+                <equals>
+                    <objectState object="robot1.M3.power"/>
+                    <int value="0"/>
+                </equals>
+                <equals>
+                    <objectState object="robot1.M4.power"/>
+                    <int value="0"/>
+                </equals>
+            </conditions>
+            <triggers>
+                <setter name="score">
+                    <sum>
+                        <variableValue name="score"/>
+                        <int value="20"/>
+                    </sum>
+                </setter>
+                <message text="Успешная остановка в зеленой зоне. Получено баллов: %text1%" >
+                    <replace var="text1">
+                        <variableValue name="score"/>
+                    </replace>
+                </message>
+            </triggers>
+        </event>
+
+        <event id="green-zone-checker2" settedUpInitially="true" dropOnFire="true">
+            <conditions glue="and">
+                <inside regionId="green-zone2" objectId="robot1" objectPoint="all"/>
+                <equals>
+                    <objectState object="robot1.M3.power"/>
+                    <int value="0"/>
+                </equals>
+                <equals>
+                    <objectState object="robot1.M4.power"/>
+                    <int value="0"/>
+                </equals>
+            </conditions>
+            <triggers>
+                <setter name="score">
+                    <sum>
+                        <variableValue name="score"/>
+                        <int value="20"/>
+                    </sum>
+                </setter>
+                <message text="Успешная остановка в зеленой зоне. Получено баллов: %text1%" >
+                    <replace var="text1">
+                        <variableValue name="score"/>
+                    </replace>
+                </message>
+            </triggers>
+        </event>
+
+        <event id="green-zone-checker3" settedUpInitially="true" dropOnFire="true">
+            <conditions glue="and">
+                <inside regionId="green-zone3" objectId="robot1" objectPoint="all"/>
+                <equals>
+                    <objectState object="robot1.M3.power"/>
+                    <int value="0"/>
+                </equals>
+                <equals>
+                    <objectState object="robot1.M4.power"/>
+                    <int value="0"/>
+                </equals>
+            </conditions>
+            <triggers>
+                <setter name="score">
+                    <sum>
+                        <variableValue name="score"/>
+                        <int value="20"/>
+                    </sum>
+                </setter>
+                <message text="Успешная остановка в зеленой зоне. Получено баллов: %text1%" >
+                    <replace var="text1">
+                        <variableValue name="score"/>
+                    </replace>
+                </message>
+            </triggers>
+        </event>
+
+        <event id="green-zone-checker4" settedUpInitially="true" dropOnFire="true">
+            <conditions glue="and">
+                <inside regionId="green-zone4" objectId="robot1" objectPoint="all"/>
+                <equals>
+                    <objectState object="robot1.M3.power"/>
+                    <int value="0"/>
+                </equals>
+                <equals>
+                    <objectState object="robot1.M4.power"/>
+                    <int value="0"/>
+                </equals>
+            </conditions>
+            <triggers>
+                <setter name="score">
+                    <sum>
+                        <variableValue name="score"/>
+                        <int value="20"/>
+                    </sum>
+                </setter>
+                <message text="Успешная остановка в зеленой зоне. Получено баллов: %text1%" >
+                    <replace var="text1">
+                        <variableValue name="score"/>
+                    </replace>
+                </message>
+            </triggers>
+        </event>
+
+        <event id="green-zone-checker5" settedUpInitially="true" dropOnFire="true">
+            <conditions glue="and">
+                <inside regionId="green-zone5" objectId="robot1" objectPoint="all"/>
+                <equals>
+                    <objectState object="robot1.M3.power"/>
+                    <int value="0"/>
+                </equals>
+                <equals>
+                    <objectState object="robot1.M4.power"/>
+                    <int value="0"/>
+                </equals>
+            </conditions>
+            <triggers>
+                <setter name="score">
+                    <sum>
+                        <variableValue name="score"/>
+                        <int value="20"/>
+                    </sum>
+                </setter>
+                <message text="Успешная остановка в зеленой зоне. Получено баллов: %text1%" >
+                    <replace var="text1">
+                        <variableValue name="score"/>
+                    </replace>
+                </message>
+            </triggers>
+        </event>
+
+        <!--        <event id="dead-zones-checker" settedUpInitially="true">-->
+        <!--            <conditions glue="and">-->
+        <!--                <conditions glue="or">-->
+        <!--                    <inside regionId="dead-zone1" objectId="robot1" objectPoint="all"/>-->
+        <!--                    <inside regionId="dead-zone2" objectId="robot1" objectPoint="all"/>-->
+        <!--                    <inside regionId="dead-zone3" objectId="robot1" objectPoint="all"/>-->
+        <!--                    <inside regionId="dead-zone4" objectId="robot1" objectPoint="all"/>-->
+        <!--                    <inside regionId="dead-zone5" objectId="robot1" objectPoint="all"/>-->
+        <!--                    <inside regionId="dead-zone6" objectId="robot1" objectPoint="all"/>-->
+        <!--                </conditions>-->
+        <!--                <equals>-->
+        <!--                    <objectState object="robot1.M3.power"/>-->
+        <!--                    <int value="0"/>-->
+        <!--                </equals>-->
+        <!--                <equals>-->
+        <!--                    <objectState object="robot1.M4.power"/>-->
+        <!--                    <int value="0"/>-->
+        <!--                </equals>-->
+        <!--            </conditions>-->
+        <!--            <triggers>-->
+        <!--                <setter name="score">-->
+        <!--                    <int value="0"/>-->
+        <!--                </setter>-->
+        <!--                <fail message="Выполнена остановка не в зеленой зоне. Задание провалено. Набрано 0 баллов."/>-->
+        <!--            </triggers>-->
+        <!--        </event>-->
+    </constraints>
+</root>

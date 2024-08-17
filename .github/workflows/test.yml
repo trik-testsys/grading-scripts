@@ -1,0 +1,19 @@
+name: "Build docker from master, run tests"
+
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+
+jobs:
+  build-test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Build docker from master
+        run: ./build.sh --trik-studio-version-kind master --docker-hub-user username --verbose
+
+      - name: Run tests
+        run: IMAGE="$(docker images -q --format='{{.ID}}' | head -1)" ./run_tests.sh

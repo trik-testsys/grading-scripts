@@ -1,0 +1,4 @@
+-------- Results for ./results/straight_line/solution_partial --------
+./results/straight_line/solution_partial/1_square.json: 40
+./results/straight_line/solution_partial/2_square.json: 40
+TOTAL: 80
