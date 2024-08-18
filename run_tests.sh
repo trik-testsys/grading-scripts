@@ -9,7 +9,7 @@ summarize_results(){
   RESULT_DIRECTORY=$1
   SUM=0
 
-  echo "-------- Results for $RESULT_DIRECTORY --------"
+  echo "-------- Results for $(basename "$RESULT_DIRECTORY") --------"
   for file in "$RESULT_DIRECTORY"/*.json
   do
     if grep -q error "$file"; then
@@ -19,7 +19,7 @@ summarize_results(){
       SUM=$((SUM + RESULT))
     fi
 
-    echo "$file: $RESULT"
+    echo "$(basename "$file"): $RESULT"
   done
 
   echo "TOTAL: $SUM"
