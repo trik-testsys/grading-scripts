@@ -24,6 +24,7 @@ jobs:
             fix
             feat
             chore
+            refactor
           scopes: |
             tests
             scripts

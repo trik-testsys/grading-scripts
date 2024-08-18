@@ -1,4 +1,4 @@
--------- Results for ./results/straight_line/solution_zero --------
-./results/straight_line/solution_zero/1_square.json: ERROR
-./results/straight_line/solution_zero/2_square.json: ERROR
+-------- Results for solution_zero --------
+1_square.json: ERROR
+2_square.json: ERROR
 TOTAL: 0
