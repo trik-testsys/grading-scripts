@@ -40,6 +40,13 @@ grade() {
       );
   fi
 
+  if [ -n "${VIDEO_DIRECTORY}" ]; then
+      MOUNT_OPTS=(
+        --mount type=bind,source="$VIDEO_DIRECTORY",target="/video"
+        "${MOUNT_OPTS[@]}"
+      );
+  fi
+
   if [ -n "${SCRIPT_FILE}" ]; then
       MOUNT_OPTS=(
         --mount type=bind,source="$SCRIPT_FILE",target="/script.py",readonly
@@ -81,6 +88,8 @@ Grade TrikStudio submission with specified fields
 
 --inputs-directory    (Optional) Set directory which contains inputs for corresponding fields
 
+--video-directory     (Optional) Set directory which will contains recorded screen for each field passing
+
 --result-directory    Set directory which will contains grading results
 
 --debug-directory     (Optional) Set directory which will contains patched submissions, patcher args, 2D-model args
@@ -111,6 +120,11 @@ while [[ $# -gt 0 ]]; do
       ;;
     --inputs-directory)
       INPUTS_DIRECTORY="$2"
+      shift
+      shift
+      ;;
+    --video-directory)
+      VIDEO_DIRECTORY="$2"
       shift
       shift
       ;;
@@ -171,6 +185,11 @@ fi
 
 if [ -n "${INPUTS_DIRECTORY}" ] && [ ! -d "${INPUTS_DIRECTORY}" ]; then
     echo "--inputs-directory specified, but $INPUTS_DIRECTORY doesn't exists"
+    exit 1
+fi
+
+if [ -n "${VIDEO_DIRECTORY}" ] && [ ! -d "${VIDEO_DIRECTORY}" ]; then
+    echo "--video-directory specified, but $VIDEO_DIRECTORY doesn't exists"
     exit 1
 fi
 
