@@ -64,7 +64,7 @@ test_submission_single(){
 
   if [ -d "/video" ]; then
     echo "q" >> stop
-    wait $FFMPEG_PID
+    wait "$FFMPEG_PID"
     rm stop
   fi
 
