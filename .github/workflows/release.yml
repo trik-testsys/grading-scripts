@@ -25,4 +25,8 @@ jobs:
         run: ./build.sh --trik-studio-version-kind master --docker-hub-user $USERNAME
 
       - name: Push tagged image to docker.io
-        run: docker push "$(docker images | tail -n +2 | awk '{print $1":"$2}' | head -n 1)-${GITHUB_REF:11}"
+        run: |
+          CURRENT_NAME="$(docker images | tail -n +2 | awk '{print $1":"$2}' | head -n 1)"
+          NEW_NAME="${CURRENT_NAME}-${GITHUB_REF:11}"
+          docker tag "$CURRENT_NAME" "$NEW_NAME"
+          docker push "$NEW_NAME"
