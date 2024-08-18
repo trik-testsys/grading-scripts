@@ -19,7 +19,7 @@ EOF
 }
 
 create_name() {
-  echo "$DOCKER_HUB_USER/trik-studio:$TRIK_STUDIO_VERSION_KIND-$1"
+  echo "$DOCKER_HUB_USER/trik-studio:$TRIK_STUDIO_VERSION_KIND-$1-$(date +%F)"
 }
 
 build() {
