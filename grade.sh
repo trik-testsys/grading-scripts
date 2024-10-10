@@ -20,7 +20,7 @@ grade() {
 
   echo "-------------------------- Start grading --------------------------"
   echo "Submission file: $SUBMISSION_FILE"
-  echo "Script file: $SCRIPT_FILE"
+  echo "Mode: $MODE"
   echo "Fields directory: $FIELDS_DIRECTORY"
   echo "Inputs directory: $INPUTS_DIRECTORY"
   echo "Result directory: $RESULT_DIRECTORY"
@@ -28,7 +28,8 @@ grade() {
 
 
   MOUNT_OPTS=(
-    --mount type=bind,source="$SUBMISSION_FILE",target="/submission.qrs",readonly
+    -e MODE="$MODE"
+    --mount type=bind,source="$SUBMISSION_FILE",target="/submission.$MODE",readonly
     --mount type=bind,source="$FIELDS_DIRECTORY",target="/fields",readonly
     --mount type=bind,source="$RESULT_DIRECTORY",target="/results"
   );
@@ -43,13 +44,6 @@ grade() {
   if [ -n "${VIDEO_DIRECTORY}" ]; then
       MOUNT_OPTS=(
         --mount type=bind,source="$VIDEO_DIRECTORY",target="/video"
-        "${MOUNT_OPTS[@]}"
-      );
-  fi
-
-  if [ -n "${SCRIPT_FILE}" ]; then
-      MOUNT_OPTS=(
-        --mount type=bind,source="$SCRIPT_FILE",target="/script.py",readonly
         "${MOUNT_OPTS[@]}"
       );
   fi
@@ -80,9 +74,9 @@ Grade TrikStudio submission with specified fields
 
 --help                Display help
 
---submission-file     Set submission file
+--mode                Set grading mode (qrs|py|js)
 
---script-file         (Optional) Set submission script file
+--submission-file     Set submission file
 
 --fields-directory    Set directory which contains fields
 
@@ -108,8 +102,8 @@ while [[ $# -gt 0 ]]; do
       shift
       shift
       ;;
-    --script-file)
-      SCRIPT_FILE="$2"
+    --mode)
+      MODE="$2"
       shift
       shift
       ;;
@@ -158,6 +152,15 @@ while [[ $# -gt 0 ]]; do
   esac
 done
 
+case $MODE in
+  py|js|qrs)
+  ;;
+  *)
+    echo "Unexpected --mode: $MODE"
+    exit 1
+  ;;
+esac
+
 if [ -z "${SUBMISSION_FILE}" ]; then
     echo "Required option --submission-file is unspecified"
     exit 1
@@ -165,11 +168,6 @@ fi
 
 if [ ! -f "${SUBMISSION_FILE}" ]; then
     echo "$SUBMISSION_FILE doesn't exists"
-    exit 1
-fi
-
-if [ -n "${SCRIPT_FILE}" ] && [ ! -f "${SCRIPT_FILE}" ]; then
-    echo "--script-file specified, but $SCRIPT_FILE doesn't exists"
     exit 1
 fi
 

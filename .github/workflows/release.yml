@@ -21,10 +21,20 @@ jobs:
           username: ${{ secrets.DOCKER_USERNAME }}
           password: ${{ secrets.DOCKER_PASSWORD }}
 
-      - name: Build image
+      - name: Build master image
         run: ./build.sh --trik-studio-version-kind master --docker-hub-user $USERNAME
 
-      - name: Push tagged image to docker.io
+      - name: Push tagged master image to docker.io
+        run: |
+          CURRENT_NAME="$(docker images | tail -n +2 | awk '{print $1":"$2}' | head -n 1)"
+          NEW_NAME="${CURRENT_NAME}-${GITHUB_REF:11}"
+          docker tag "$CURRENT_NAME" "$NEW_NAME"
+          docker push "$NEW_NAME"
+
+      - name: Build release image
+        run: ./build.sh --trik-studio-version-kind release --docker-hub-user $USERNAME
+
+      - name: Push tagged release image to docker.io
         run: |
           CURRENT_NAME="$(docker images | tail -n +2 | awk '{print $1":"$2}' | head -n 1)"
           NEW_NAME="${CURRENT_NAME}-${GITHUB_REF:11}"

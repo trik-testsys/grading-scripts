@@ -1,4 +1,3 @@
--------- Results for solution_partial --------
 1_square.json: 40
 2_square.json: 40
 TOTAL: 80

@@ -2,19 +2,33 @@
 
 test_submission_single(){
   FIELD_NAME=$1
-
   TMP_SUBMIT="/tmp-submission.qrs"
-  cp "/submission.qrs" "$TMP_SUBMIT"
+
+  case $MODE in
+    py|js)
+      cp "/empty.qrs" "$TMP_SUBMIT"
+    ;;
+    qrs)
+      cp "/submission.qrs" "$TMP_SUBMIT"
+    ;;
+    *)
+      echo "Unexpected mode: $MODE"
+      exit 1
+    ;;
+  esac
 
   PATCHER_OPTS=(
     -f "/fields/${FIELD_NAME}.xml"
   );
-  if [ -f /script.py ]; then
-    PATCHER_OPTS=(
-      "${PATCHER_OPTS[@]}"
-      -s /script.py
-    );
-  fi
+
+  case $MODE in
+    py|js)
+      PATCHER_OPTS=(
+        "${PATCHER_OPTS[@]}"
+        -s "/submission.$MODE"
+      );
+    ;;
+  esac
 
   if [ -d "/debug" ]; then
     touch "/debug/${FIELD_NAME}_patcher_options.txt"
@@ -37,12 +51,14 @@ test_submission_single(){
     );
   fi
 
-  if [ -f /script.py ]; then
-    TWOD_MODEL_OPTS=(
-      "${TWOD_MODEL_OPTS[@]}"
-      --mode script
-    );
-  fi
+  case $MODE in
+    py|js)
+      TWOD_MODEL_OPTS=(
+        "${TWOD_MODEL_OPTS[@]}"
+        --mode script
+      );
+    ;;
+  esac
 
   if [ -d "/video" ]; then
     touch stop
@@ -58,6 +74,7 @@ test_submission_single(){
   if [ -d "/debug" ]; then
     touch "/debug/${FIELD_NAME}_twod_options.txt"
     echo "${TWOD_MODEL_OPTS[*]}" >> "/debug/${FIELD_NAME}_twod_options.txt"
+    cp "/tmp-submission.qrs" "/debug/${FIELD_NAME}_patched.qrs"
   fi
 
   ./TRIKStudio/bin/2D-model "${TWOD_MODEL_OPTS[@]}" "$TMP_SUBMIT"

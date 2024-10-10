@@ -1,4 +1,3 @@
--------- Results for solution_full --------
 1_square.json: 100
 2_square.json: 100
 TOTAL: 200
