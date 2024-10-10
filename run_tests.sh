@@ -9,7 +9,6 @@ summarize_results(){
   RESULT_DIRECTORY=$1
   SUM=0
 
-  echo "-------- Results for $(basename "$RESULT_DIRECTORY") --------"
   for file in "$RESULT_DIRECTORY"/*.json
   do
     if grep -q error "$file"; then
@@ -33,7 +32,7 @@ run_task() {
 
   mkdir "./results/$TASK_NAME"
 
-  for solution_file in "$TASK_DIRECTORY/solutions/"*;
+  for solution_file in "$TASK_DIRECTORY/solutions/"*.qrs;
   do
     if ! [ -f "$solution_file" ]; then
       echo "Unexpected directory: $solution_file"
@@ -49,23 +48,26 @@ run_task() {
       exit_and_clear 1
     fi
 
-    RESULTS_DIR="./results/$TASK_NAME/$SOLUTION_NAME"
-    ACTUAL_SUMMARY_FILE="$RESULTS_DIR/summary.txt"
-    mkdir "$RESULTS_DIR"
+    for mode in qrs # py js qrs;
+    do
+      RESULTS_DIR="./results/$TASK_NAME/$SOLUTION_NAME/$mode"
+      ACTUAL_SUMMARY_FILE="$RESULTS_DIR/summary.txt"
+      mkdir -p "$RESULTS_DIR"
 
-    ./grade.sh \
-      --submission-file "$solution_file" \
-      --fields-directory "$TASK_DIRECTORY/fields" \
-      --result-directory "$RESULTS_DIR" \
-      --image "$IMAGE" || exit_and_clear 1
+      ./grade.sh \
+        --mode $mode \
+        --submission-file "$TASK_DIRECTORY/solutions/$SOLUTION_NAME.$mode" \
+        --fields-directory "$TASK_DIRECTORY/fields" \
+        --result-directory "$RESULTS_DIR" \
+        --debug-directory "$RESULTS_DIR" \
+        --image "$IMAGE" || exit_and_clear 1
 
-    summarize_results "$RESULTS_DIR" >> "$RESULTS_DIR/summary.txt"
-    echo "diff $EXPECTED_SUMMARY_FILE $ACTUAL_SUMMARY_FILE:"
-    diff "$EXPECTED_SUMMARY_FILE" "$ACTUAL_SUMMARY_FILE" || exit_and_clear 1
+      summarize_results "$RESULTS_DIR" >> "$ACTUAL_SUMMARY_FILE"
+      echo "diff $EXPECTED_SUMMARY_FILE $ACTUAL_SUMMARY_FILE:"
+      diff "$EXPECTED_SUMMARY_FILE" "$ACTUAL_SUMMARY_FILE" || exit_and_clear 1
+    done
   done
 }
-
-
 
 if [[ -z "${IMAGE}" ]]; then
   echo "IMAGE env var undefined"

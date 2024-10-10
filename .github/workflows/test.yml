@@ -15,5 +15,11 @@ jobs:
       - name: Build docker from master
         run: ./build.sh --trik-studio-version-kind master --docker-hub-user username --verbose
 
-      - name: Run tests
+      - name: Run master tests
+        run: IMAGE="$(docker images -q --format='{{.ID}}' | head -1)" ./run_tests.sh
+
+      - name: Build docker from master
+        run: ./build.sh --trik-studio-version-kind release --docker-hub-user username --verbose
+
+      - name: Run release tests
         run: IMAGE="$(docker images -q --format='{{.ID}}' | head -1)" ./run_tests.sh
