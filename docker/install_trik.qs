@@ -29,8 +29,9 @@ Controller.prototype.ComponentSelectionPageCallback = function() {
 }
 
 Controller.prototype.LicenseAgreementPageCallback = function() {
-  gui.currentPageWidget().AcceptLicenseRadioButton.setChecked(true);
-  gui.clickButton(buttons.NextButton);
+  var x = gui.currentPageWidget().AcceptLicenseRadioButton || gui.currentPageWidget().AcceptLicenseCheckBox;
+  x.setChecked(true);
+  gui.clickButton(buttons.NextButton);  
 }
 
 Controller.prototype.ReadyForInstallationPageCallback = function() {

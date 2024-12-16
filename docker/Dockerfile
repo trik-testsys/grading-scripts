@@ -26,6 +26,10 @@ RUN echo 'APT::Install-Recommends "0";' > /etc/apt/apt.conf.d/99norecommends \
     xvfb \
     python3 \
     python3-dev \
+    libxcb-icccm4 \
+    libxcb-image0 \
+    libxcb-keysyms1 \
+    libxcb-render-util0 \
     && apt-get autoremove -y \
     && apt-get clean -y
 
