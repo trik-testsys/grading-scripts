@@ -29,9 +29,9 @@ build() {
   echo "DockerHub user: $DOCKER_HUB_USER"
 
   if [ -n $"${VERBOSE}" ]; then
-    docker build --build-arg TRIK_STUDIO_VERSION_KIND="$TRIK_STUDIO_VERSION_KIND" ./docker
+    docker build --no-cache --build-arg TRIK_STUDIO_VERSION_KIND="$TRIK_STUDIO_VERSION_KIND" ./docker
   else
-    docker build --build-arg TRIK_STUDIO_VERSION_KIND="$TRIK_STUDIO_VERSION_KIND" ./docker > /dev/null
+    docker build --no-cache --build-arg TRIK_STUDIO_VERSION_KIND="$TRIK_STUDIO_VERSION_KIND" ./docker > /dev/null
   fi
 
   if [ ! $? -eq 0 ]; then
