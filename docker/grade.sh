@@ -62,7 +62,7 @@ test_submission_single(){
 
   if [ -d "/video" ]; then
     touch stop
-    ffmpeg -video_size 1024x768 -framerate 24 -f x11grab -i "$DISPLAY" -draw_mouse 0 "/video/${FIELD_NAME}.mp4" < stop &
+    ffmpeg -video_size 1024x768 -framerate 24 -f x11grab -i "$DISPLAY" -pix_fmt yuv420p -draw_mouse 0 "/video/${FIELD_NAME}.mp4" < stop &
     FFMPEG_PID=$!
   else
     TWOD_MODEL_OPTS=(
