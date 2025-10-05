@@ -31,12 +31,13 @@ jobs:
           docker tag "$CURRENT_NAME" "$NEW_NAME"
           docker push "$NEW_NAME"
 
-      - name: Build release image
-        run: ./build.sh --trik-studio-version-kind release --docker-hub-user $USERNAME
+      # TODO: Enable when release starts support --delay-before-exit
+      # - name: Build release image
+      #   run: ./build.sh --trik-studio-version-kind release --docker-hub-user $USERNAME
 
-      - name: Push tagged release image to docker.io
-        run: |
-          CURRENT_NAME="$(docker images | tail -n +2 | awk '{print $1":"$2}' | head -n 1)"
-          NEW_NAME="${CURRENT_NAME}-${GITHUB_REF:11}"
-          docker tag "$CURRENT_NAME" "$NEW_NAME"
-          docker push "$NEW_NAME"
+      # - name: Push tagged release image to docker.io
+      #   run: |
+      #     CURRENT_NAME="$(docker images | tail -n +2 | awk '{print $1":"$2}' | head -n 1)"
+      #     NEW_NAME="${CURRENT_NAME}-${GITHUB_REF:11}"
+      #     docker tag "$CURRENT_NAME" "$NEW_NAME"
+      #     docker push "$NEW_NAME"

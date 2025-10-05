@@ -42,8 +42,10 @@ COPY empty.qrs empty.qrs
 COPY install_trik.qs install_trik.qs
 COPY install_trik.sh install_trik.sh
 COPY echo_version.sh echo_version.sh
+COPY generate.sh generate.sh
 RUN chmod +x install_trik.qs \
     && chmod +x install_trik.sh \
     && chmod +x echo_version.sh \
+    && chmod +x generate.sh \
     && ./install_trik.sh $TRIK_STUDIO_VERSION_KIND
 COPY grade.sh grade.sh

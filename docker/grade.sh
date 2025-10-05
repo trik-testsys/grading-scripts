@@ -12,7 +12,7 @@ test_submission_single(){
       cp "/submission.qrs" "$TMP_SUBMIT"
     ;;
     *)
-      echo "Unexpected mode: $MODE"
+      echo "Unexpected mode: $MODE (expected py, js or qrs)"
       exit 1
     ;;
   esac
@@ -41,6 +41,7 @@ test_submission_single(){
   TWOD_MODEL_OPTS=(
     --close
     --report "/results/${FIELD_NAME}.json"
+    --delay-before-exit 2000
   );
 
   if [ -f "/inputs/$FIELD_NAME.txt" ]; then
