@@ -31,7 +31,6 @@ run_task() {
   echo "Start testing $TASK_NAME"
 
   mkdir "./results/$TASK_NAME"
-  mkdir "./results/$TASK_NAME/generated_solutions"
 
   for solution_file in "$TASK_DIRECTORY/solutions/"*.qrs;
   do
@@ -58,38 +57,26 @@ run_task() {
         --image "$IMAGE"
     done
 
-    for mode in py js qrs;
-    do
-      RESULTS_DIR="./results/$TASK_NAME/$SOLUTION_NAME/$mode"
-      ACTUAL_SUMMARY_FILE="$RESULTS_DIR/summary.txt"
-      mkdir -p "$RESULTS_DIR"
 
-      case $mode in
-        py|js)
-          SUBMISSION_FILE="./results/$TASK_NAME/generated_solutions/submission.$mode"
-          ;;
-        qrs)
-          SUBMISSION_FILE="$TASK_DIRECTORY/solutions/$SOLUTION_NAME.$mode"
-          ;;
-        *)
-          echo "Unreachable"
-          exit 1
-          ;;
-      esac
+    RESULTS_DIR="./results/$TASK_NAME/$SOLUTION_NAME/qrs"
+    ACTUAL_SUMMARY_FILE="$RESULTS_DIR/summary.txt"
+    mkdir -p "$RESULTS_DIR"
 
-      ./grade.sh \
-        --mode $mode \
-        --submission-file "$SUBMISSION_FILE" \
-        --fields-directory "$TASK_DIRECTORY/fields" \
-        --video-directory "$RESULTS_DIR" \
-        --result-directory "$RESULTS_DIR" \
-        --debug-directory "$RESULTS_DIR" \
-        --image "$IMAGE" || exit_and_clear 1
+    SUBMISSION_FILE="$TASK_DIRECTORY/solutions/$SOLUTION_NAME.qrs"
 
-      summarize_results "$RESULTS_DIR" >> "$ACTUAL_SUMMARY_FILE"
-      echo "diff $EXPECTED_SUMMARY_FILE $ACTUAL_SUMMARY_FILE:"
-      diff "$EXPECTED_SUMMARY_FILE" "$ACTUAL_SUMMARY_FILE" || exit_and_clear 1
-    done
+    ./grade.sh \
+      --mode qrs \
+      --submission-file "$SUBMISSION_FILE" \
+      --fields-directory "$TASK_DIRECTORY/fields" \
+      --video-directory "$RESULTS_DIR" \
+      --result-directory "$RESULTS_DIR" \
+      --debug-directory "$RESULTS_DIR" \
+      --image "$IMAGE" || exit_and_clear 1
+
+    summarize_results "$RESULTS_DIR" >> "$ACTUAL_SUMMARY_FILE"
+    echo "diff $EXPECTED_SUMMARY_FILE $ACTUAL_SUMMARY_FILE:"
+    diff "$EXPECTED_SUMMARY_FILE" "$ACTUAL_SUMMARY_FILE" || exit_and_clear 1
+
   done
 }
 
