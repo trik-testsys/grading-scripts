@@ -46,14 +46,8 @@ test_submission_single(){
   TWOD_MODEL_OPTS=(
     --close
     --report "/results/${FIELD_NAME}.json"
+    --delay-before-exit 2000
   );
-
-  if [ -n "$TWOD_MODEL_HAS_DELAY_BEFORE_EXIT" ]; then
-    TWOD_MODEL_OPTS=(
-      "${TWOD_MODEL_OPTS[@]}"
-      --delay-before-exit 2000
-    );
-  fi
 
   if [ -f "/inputs/$FIELD_NAME.txt" ]; then
     cp "/inputs/$FIELD_NAME.txt" "/input.txt"
@@ -103,12 +97,6 @@ test_submission_single(){
 test_submissions(){
   export TRIK_PYTHONPATH_BUNDLE_DIR=/TRIKStudio/lib/python-runtime
   export TRIK_PYTHONPATH=.:"${TRIK_PYTHONPATH_BUNDLE_DIR}/base_library.zip:${TRIK_PYTHONPATH_BUNDLE_DIR}/lib-dynload:${TRIK_PYTHONPATH_BUNDLE_DIR}"
-
-  # --delay-before-exit is available since TRIK Studio 2025.4
-  TWOD_MODEL_HAS_DELAY_BEFORE_EXIT=""
-  if ./TRIKStudio/bin/2D-model --help -platform offscreen 2>/dev/null | grep -q -- '--delay-before-exit'; then
-    TWOD_MODEL_HAS_DELAY_BEFORE_EXIT="1"
-  fi
 
   export DISPLAY=:99
   Xvfb $DISPLAY -screen 0 1024x768x24 &
