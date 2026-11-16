@@ -16,10 +16,10 @@ jobs:
         run: ./build.sh --trik-studio-version-kind master --docker-hub-user username --verbose
 
       - name: Run master tests
-        run: IMAGE="$(docker images -q --format='{{.ID}}' | head -1)" ./run_tests.sh
+        run: IMAGE="$(docker images --filter 'reference=username/trik-studio:master-*' --format '{{.Repository}}:{{.Tag}}' | head -n 1)" ./run_tests.sh
 
       - name: Build docker from release
         run: ./build.sh --trik-studio-version-kind release --docker-hub-user username --verbose
 
       - name: Run release tests
-        run: IMAGE="$(docker images -q --format='{{.ID}}' | head -1)" ./run_tests.sh
+        run: IMAGE="$(docker images --filter 'reference=username/trik-studio:release-*' --format '{{.Repository}}:{{.Tag}}' | head -n 1)" ./run_tests.sh

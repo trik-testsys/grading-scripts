@@ -53,7 +53,7 @@ run_task() {
       ./generate.sh --submission-file \
         "$TASK_DIRECTORY/solutions/$SOLUTION_NAME.qrs" \
         --mode $mode \
-        --result-directory ./results/$TASK_NAME/generated_solutions \
+        --result-directory "./results/$TASK_NAME/generated_solutions" \
         --image "$IMAGE"
     done
 

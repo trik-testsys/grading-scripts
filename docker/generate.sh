@@ -24,4 +24,4 @@ generate_solution() {
     rm "$TMP_SUBMIT"
 }
 
-generate_solution $1
+generate_solution "$1"

@@ -26,7 +26,7 @@ jobs:
 
       - name: Push tagged master image to docker.io
         run: |
-          CURRENT_NAME="$(docker images | tail -n +2 | awk '{print $1":"$2}' | head -n 1)"
+          CURRENT_NAME="$(docker images --filter "reference=$USERNAME/trik-studio:master-*" --format '{{.Repository}}:{{.Tag}}' | head -n 1)"
           NEW_NAME="${CURRENT_NAME}-${GITHUB_REF:11}"
           docker tag "$CURRENT_NAME" "$NEW_NAME"
           docker push "$NEW_NAME"
@@ -36,7 +36,7 @@ jobs:
 
       - name: Push tagged release image to docker.io
         run: |
-          CURRENT_NAME="$(docker images | tail -n +2 | awk '{print $1":"$2}' | head -n 1)"
+          CURRENT_NAME="$(docker images --filter "reference=$USERNAME/trik-studio:release-*" --format '{{.Repository}}:{{.Tag}}' | head -n 1)"
           NEW_NAME="${CURRENT_NAME}-${GITHUB_REF:11}"
           docker tag "$CURRENT_NAME" "$NEW_NAME"
           docker push "$NEW_NAME"

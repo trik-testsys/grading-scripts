@@ -28,18 +28,28 @@ build() {
   echo "TrikStudio version kind: $TRIK_STUDIO_VERSION_KIND"
   echo "DockerHub user: $DOCKER_HUB_USER"
 
+  IID_FILE=$(mktemp)
+
   if [ -n $"${VERBOSE}" ]; then
-    docker build --no-cache --build-arg TRIK_STUDIO_VERSION_KIND="$TRIK_STUDIO_VERSION_KIND" ./docker
+    docker build --no-cache --iidfile "$IID_FILE" --build-arg TRIK_STUDIO_VERSION_KIND="$TRIK_STUDIO_VERSION_KIND" ./docker
   else
-    docker build --no-cache --build-arg TRIK_STUDIO_VERSION_KIND="$TRIK_STUDIO_VERSION_KIND" ./docker > /dev/null
+    docker build --no-cache --iidfile "$IID_FILE" --build-arg TRIK_STUDIO_VERSION_KIND="$TRIK_STUDIO_VERSION_KIND" ./docker > /dev/null
   fi
 
   if [ ! $? -eq 0 ]; then
+    rm -f "$IID_FILE"
     exit 1
   fi
 
-  CURRENT_DOCKER_IMAGE_NAME=$(docker images -q | head -n 1)
+  CURRENT_DOCKER_IMAGE_NAME=$(cat "$IID_FILE")
+  rm -f "$IID_FILE"
+
   RAW_VERSION=$(docker run --rm "$CURRENT_DOCKER_IMAGE_NAME" ./echo_version.sh)
+  if [ -z "$RAW_VERSION" ]; then
+    echo "Cannot read TrikStudio version from image $CURRENT_DOCKER_IMAGE_NAME"
+    exit 1
+  fi
+
   NAME=$(create_name "$RAW_VERSION")
 
   docker tag "$CURRENT_DOCKER_IMAGE_NAME" "$NAME"

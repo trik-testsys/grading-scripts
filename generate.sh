@@ -6,9 +6,9 @@
 
 run_docker_generate() {
   if [ -n $"${VERBOSE}" ]; then
-    docker run "$@" /bin/bash /generate.sh $MODE
+    docker run "$@" /bin/bash /generate.sh "$MODE"
   else
-    docker run "$@" /bin/bash /generate.sh $MODE > /dev/null
+    docker run "$@" /bin/bash /generate.sh "$MODE" > /dev/null
   fi
 
   if [ ! $? -eq 0 ]; then
