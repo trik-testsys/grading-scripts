@@ -1,25 +1,55 @@
-name: "Build docker from master, run tests"
+name: "Build docker images for all TRIK Studio versions, run tests"
 
 on:
   push:
     branches: [ "main" ]
   pull_request:
     branches: [ "main" ]
+  workflow_dispatch:
+    inputs:
+      rebuild-base:
+        description: "Rebuild TRIK Studio base images from source and push them (overwrites tags)"
+        type: boolean
+        default: false
 
 jobs:
-  build-test:
+  versions:
     runs-on: ubuntu-latest
+    outputs:
+      versions: ${{ steps.versions.outputs.versions }}
     steps:
       - uses: actions/checkout@v4
 
-      - name: Build docker from master
-        run: ./build.sh --trik-studio-version-kind master --docker-hub-user username --verbose
+      - name: Read versions.txt
+        id: versions
+        run: echo "versions=$(grep -Ev '^[[:space:]]*(#|$)' versions.txt | awk '{ print $1 }' | jq -R . | jq -cs .)" >> "$GITHUB_OUTPUT"
 
-      - name: Run master tests
-        run: IMAGE="$(docker images --filter 'reference=username/trik-studio:master-*' --format '{{.Repository}}:{{.Tag}}' | head -n 1)" ./run_tests.sh
+  build-test:
+    needs: versions
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        trik-studio-version: ${{ fromJson(needs.versions.outputs.versions) }}
+    env:
+      # Base images are pulled from this Docker Hub user (secrets are unavailable in PRs from forks)
+      DOCKER_HUB_USER: ${{ secrets.DOCKER_USERNAME || 'testsystrik' }}
+      # Missing base images are pushed only from main or manual runs
+      PUSH_BASE: ${{ github.event_name != 'pull_request' && '--push-base' || '' }}
+      # Manual run with rebuild-base rebuilds base images even if they exist
+      BASE_MODE: ${{ inputs.rebuild-base && 'build' || 'auto' }}
+    steps:
+      - uses: actions/checkout@v4
 
-      - name: Build docker from release
-        run: ./build.sh --trik-studio-version-kind release --docker-hub-user username --verbose
+      - name: Log in to Docker Hub
+        if: github.event_name != 'pull_request'
+        uses: docker/login-action@f4ef78c080cd8ba55a85445d5b36e214a81df20a
+        with:
+          username: ${{ secrets.DOCKER_USERNAME }}
+          password: ${{ secrets.DOCKER_PASSWORD }}
 
-      - name: Run release tests
-        run: IMAGE="$(docker images --filter 'reference=username/trik-studio:release-*' --format '{{.Repository}}:{{.Tag}}' | head -n 1)" ./run_tests.sh
+      - name: Build docker image for TRIK Studio ${{ matrix.trik-studio-version }}
+        run: ./build.sh --trik-studio-version "${{ matrix.trik-studio-version }}" --docker-hub-user "$DOCKER_HUB_USER" --scripts-version ci --base "$BASE_MODE" $PUSH_BASE --verbose
+
+      - name: Run tests for TRIK Studio ${{ matrix.trik-studio-version }}
+        run: IMAGE="$DOCKER_HUB_USER/trik-studio:${{ matrix.trik-studio-version }}-ci" ./run_tests.sh
