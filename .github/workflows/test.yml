@@ -1,4 +1,4 @@
-name: "Build docker from master, run tests"
+name: "Build docker images for all TRIK Studio versions, run tests"
 
 on:
   push:
@@ -7,19 +7,29 @@ on:
     branches: [ "main" ]
 
 jobs:
-  build-test:
+  versions:
     runs-on: ubuntu-latest
+    outputs:
+      versions: ${{ steps.versions.outputs.versions }}
     steps:
       - uses: actions/checkout@v4
 
-      - name: Build docker from master
-        run: ./build.sh --trik-studio-version-kind master --docker-hub-user username --verbose
+      - name: Read versions.txt
+        id: versions
+        run: echo "versions=$(grep -Ev '^[[:space:]]*(#|$)' versions.txt | awk '{ print $1 }' | jq -R . | jq -cs .)" >> "$GITHUB_OUTPUT"
 
-      - name: Run master tests
-        run: IMAGE="$(docker images --filter 'reference=username/trik-studio:master-*' --format '{{.Repository}}:{{.Tag}}' | head -n 1)" ./run_tests.sh
+  build-test:
+    needs: versions
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        trik-studio-version: ${{ fromJson(needs.versions.outputs.versions) }}
+    steps:
+      - uses: actions/checkout@v4
 
-      - name: Build docker from release
-        run: ./build.sh --trik-studio-version-kind release --docker-hub-user username --verbose
+      - name: Build docker image for TRIK Studio ${{ matrix.trik-studio-version }}
+        run: ./build.sh --trik-studio-version "${{ matrix.trik-studio-version }}" --docker-hub-user username --scripts-version ci --verbose
 
-      - name: Run release tests
-        run: IMAGE="$(docker images --filter 'reference=username/trik-studio:release-*' --format '{{.Repository}}:{{.Tag}}' | head -n 1)" ./run_tests.sh
+      - name: Run tests for TRIK Studio ${{ matrix.trik-studio-version }}
+        run: IMAGE="username/trik-studio:${{ matrix.trik-studio-version }}-ci" ./run_tests.sh

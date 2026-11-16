@@ -19,11 +19,11 @@
 
 ``` 
 ├── docker
-│   ├── Dockerfile      -- Dockerfile TrikStudio
+│   ├── Dockerfile      -- Dockerfile TrikStudio (многоэтапная сборка)
+│   ├── build_trik.sh   -- Скрипт сборки TrikStudio из исходников
 │   ├── echo_version.sh -- Утилита для получения версии TrikStudio 
-│   ├── grade.sh        -- Внутренний скрипт проверки решений
-│   ├── install_trik.qs -- Qt скрипт установки
-│   └── install_trik.sh -- Скрипт установки
+│   ├── generate.sh     -- Внутренний скрипт генерации py/js решений из qrs
+│   └── grade.sh        -- Внутренний скрипт проверки решений
 ├── examples
 │   └── straight_line
 │       ├── task.png    -- Снимок поля
@@ -39,8 +39,11 @@
 │       └── fields
 │           ├── 1_square.xml -- Поле проверки 1
 │           └── 2_square.xml -- Поле проверки 2
-├── build.sh -- Скрипт сборки образа
-├── grade.sh -- Скрипт провреки решения
+├── build.sh     -- Скрипт сборки образа
+├── generate.sh  -- Скрипт генерации py/js решения из qrs
+├── grade.sh     -- Скрипт провреки решения
+├── run_tests.sh -- Прогон примеров из examples на образе
+├── versions.txt -- Список поддерживаемых версий TrikStudio
 └── README.md
 ```
 
@@ -53,29 +56,71 @@
 ./build.sh --help
 ```
 
-Образ собирается с помощью официального установщика TrikStudio,
-из mater или release версии (конфигурируется флагом скрипта).
-Взаимодействие с UI установщика реализовано с помощью Qt скрипта
-install_trik.qs.
+TrikStudio собирается из исходников
+[trikset/trik-studio](https://github.com/trikset/trik-studio)
+на зафиксированном коммите, поэтому пересборка образа старой версии
+скриптов даёт ту же версию TrikStudio.
+
+### Список версий TrikStudio
+
+Версии, для которых собираются образы, перечислены в `versions.txt`:
+по строке на версию, в формате `<версия> <SHA коммита trik-studio>`, например
+
+```
+2026.3 d7966b8aad0a046dac730360a9ed8a7797738c68
+```
+
+Чтобы добавить версию, нужно найти коммит её тэга
+(`git ls-remote --tags https://github.com/trikset/trik-studio.git '<версия>*'`,
+для аннотированного тэга нужна строка с `^{}`) и добавить строку в `versions.txt`.
+CI собирает и тестирует образ для каждой версии из списка,
+при публикации релиза все образы отправляются в Docker Hub.
+
+Минимальная поддерживаемая версия — 2025.2 (нужна опция `--only-generate`
+у 2D-model). Опция `--delay-before-exit` (появилась в 2025.4) передаётся
+в 2D-model, только если он её поддерживает.
+
+### Тэг образа
+
+```
+<docker-hub-user>/trik-studio:<версия TrikStudio>-<версия скриптов>
+```
+
+Версия скриптов по умолчанию — `git describe --tags` этого репозитория,
+в релизе — тэг релиза (например, `testsystrik/trik-studio:2026.3-v2.3.0`).
+Пример сборки:
+
+```bash
+./build.sh --trik-studio-version 2026.3 --docker-hub-user testsystrik
+```
 
 Далее подробное описание процесса сборки:
 
 ``` 
 ./build.sh [options]
-├── Сборка образа
-│   ├── Установка зависимостей TrikStudio
-│   ├── Копирование скриптов из директории docker
-│   └── Вызов install_trik.sh
-│       ├── Скачивание соответствущего установщика
-│       └── Выполнение установки с помощью install_trik.qs
-├── Получение версии TrikStudio из собранного образа с помощью echo_version.sh
-└── Тэгирование собранного образа
+├── Поиск SHA коммита для версии в versions.txt
+├── Сборка образа (docker/Dockerfile)
+│   ├── Этап builder (ubuntu 22.04), вызов build_trik.sh <версия> <SHA>
+│   │   ├── Загрузка исходников trik-studio на коммите (с сабмодулями)
+│   │   ├── Установка зависимостей (buildScripts/github/install.sh из trik-studio)
+│   │   ├── Сборка без тестов (buildScripts/github/build_internal.sh из trik-studio)
+│   │   ├── /TRIKStudio/bin: 2D-model, patcher, trik-studio, библиотеки, плагины
+│   │   ├── /TRIKStudio/lib/python-runtime: stdlib Python и numpy
+│   │   └── Список apt пакетов, нужных бинарникам во время работы
+│   └── Финальный этап (ubuntu 22.04)
+│       ├── Установка runtime пакетов, xvfb, ffmpeg
+│       ├── Копирование /TRIKStudio из builder
+│       └── Копирование скриптов из директории docker
+└── Проверка версии TrikStudio в образе с помощью echo_version.sh
 ```
+
+Сборка TrikStudio занимает десятки минут,
+инструменты сборки в итоговый образ не попадают.
 
 
 ## Проврека решений
 
-Для проверки решений предназначен скрипт ./build.sh, 
+Для проверки решений предназначен скрипт ./grade.sh, 
 для подробной информации о скрипте:
 
 ```bash

@@ -1,0 +1,9 @@
+# Версии TRIK Studio, для которых собираются образы.
+# Формат: <версия> <SHA коммита в https://github.com/trikset/trik-studio>
+# Версия используется в теге образа: <user>/trik-studio:<версия>-<версия скриптов>.
+# Минимальная поддерживаемая версия: 2025.2 (в 2D-model нужен --only-generate).
+2025.3 489a0d6aad2fc45a13a7532242fbd2d2e39876c6
+2025.4 36be1c6f64c10aa479eb06f851c3ba03a969ee7b
+2026.1 47ef6613126a409eb0d83de8eef8f41ff34465f7
+2026.2 99e3c9ec0dddce96791d7821d9c69ad3f0dae36b
+2026.3 d7966b8aad0a046dac730360a9ed8a7797738c68

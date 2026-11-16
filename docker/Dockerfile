@@ -1,51 +1,69 @@
-FROM ubuntu:22.04
-MAINTAINER Viktor Karasev <viktorkarasev27@gmail.com>
-LABEL Description="This image is for grading system for TRIK Studio testing system"
+# syntax=docker/dockerfile:1
 
-# Updating system and installing TRIK studio dependencies
-WORKDIR /
+# TRIK Studio version and commit of https://github.com/trikset/trik-studio (see versions.txt)
+ARG TRIK_STUDIO_VERSION
+ARG TRIK_STUDIO_SHA
+
+# ---------------------------------------------------------------------------
+# Builder: compiles TRIK Studio from source and assembles /TRIKStudio
+# ---------------------------------------------------------------------------
+FROM ubuntu:22.04 AS builder
+
 ARG DEBIAN_FRONTEND=noninteractive
+ARG TRIK_STUDIO_VERSION
+ARG TRIK_STUDIO_SHA
 
 RUN echo 'APT::Install-Recommends "0";' > /etc/apt/apt.conf.d/99norecommends \
     && apt-get -y update \
     && apt-get -y install \
-    apt-utils \
-    wget \
-    curl \
-    libpulse0 \
-    locales \
+    build-essential \
     ca-certificates \
-    libxkbcommon-x11-0 \
-    libfontconfig \
-    libx11-xcb1 \
-    libxrender1 \
-    libxcb-glx0 \
-    libxext6 \
-    libsm6 \
-    ffmpeg \
-    xvfb \
-    python3 \
-    python3-dev \
-    libxcb-icccm4 \
-    libxcb-image0 \
-    libxcb-keysyms1 \
-    libxcb-render-util0 \
-    && apt-get autoremove -y \
-    && apt-get clean -y
+    git \
+    rsync \
+    sudo \
+    python3-pip \
+    && rm -rf /var/lib/apt/lists/*
 
-ARG TRIK_STUDIO_VERSION_KIND="master"
+COPY build_trik.sh /build_trik.sh
+RUN --mount=type=cache,target=/ccache \
+    export CCACHE_DIR=/ccache \
+    && test -n "$TRIK_STUDIO_VERSION" && test -n "$TRIK_STUDIO_SHA" \
+    && bash /build_trik.sh "$TRIK_STUDIO_VERSION" "$TRIK_STUDIO_SHA"
 
-# Install TRIK studio
+# ---------------------------------------------------------------------------
+# Runtime: grading image
+# ---------------------------------------------------------------------------
+FROM ubuntu:22.04
+LABEL maintainer="Viktor Karasev <viktorkarasev27@gmail.com>"
+LABEL description="This image is for grading system for TRIK Studio testing system"
+
+ARG DEBIAN_FRONTEND=noninteractive
+ARG TRIK_STUDIO_VERSION
+ARG TRIK_STUDIO_SHA
+LABEL trik-studio.version="$TRIK_STUDIO_VERSION"
+LABEL trik-studio.sha="$TRIK_STUDIO_SHA"
+
 WORKDIR /
 
-COPY empty.qrs empty.qrs
-COPY install_trik.qs install_trik.qs
-COPY install_trik.sh install_trik.sh
-COPY echo_version.sh echo_version.sh
-COPY generate.sh generate.sh
-RUN chmod +x install_trik.qs \
-    && chmod +x install_trik.sh \
-    && chmod +x echo_version.sh \
-    && chmod +x generate.sh \
-    && ./install_trik.sh $TRIK_STUDIO_VERSION_KIND
-COPY grade.sh grade.sh
+COPY --from=builder /runtime-packages.txt /runtime-packages.txt
+RUN echo 'APT::Install-Recommends "0";' > /etc/apt/apt.conf.d/99norecommends \
+    && apt-get -y update \
+    && xargs -a /runtime-packages.txt apt-get -y install \
+    locales \
+    libpulse0 \
+    libqt5multimedia5-plugins \
+    fonts-dejavu-core \
+    ffmpeg \
+    xvfb \
+    && echo 'ru_RU.UTF-8 UTF-8' > /etc/locale.gen && locale-gen \
+    && rm -rf /var/lib/apt/lists/* /runtime-packages.txt
+
+COPY --from=builder /TRIKStudio /TRIKStudio
+# The official installer sets it in its launchers; 2D-model aborts on python code without it
+ENV TRIK_PYTHONPATH_BUNDLE_DIR=/TRIKStudio/lib/python-runtime
+ENV TRIK_PYTHONPATH=.:/TRIKStudio/lib/python-runtime/base_library.zip:/TRIKStudio/lib/python-runtime/lib-dynload:/TRIKStudio/lib/python-runtime
+# Plugins in bin/plugins/* depend on libraries from bin/
+RUN echo /TRIKStudio/bin > /etc/ld.so.conf.d/zz-trik-studio.conf && ldconfig
+
+COPY empty.qrs echo_version.sh generate.sh grade.sh /
+RUN chmod +x /echo_version.sh /generate.sh /grade.sh
