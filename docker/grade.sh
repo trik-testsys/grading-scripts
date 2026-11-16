@@ -37,6 +37,11 @@ test_submission_single(){
   fi
 
   ./TRIKStudio/bin/patcher "${PATCHER_OPTS[@]}" "$TMP_SUBMIT"
+  PATCHER_EXIT_CODE=$?
+  if [ "$PATCHER_EXIT_CODE" -ne 0 ]; then
+    echo "Patcher failed for field ${FIELD_NAME} with exit code ${PATCHER_EXIT_CODE}: ${PATCHER_OPTS[*]} $TMP_SUBMIT" >&2
+    exit 3
+  fi
 
   TWOD_MODEL_OPTS=(
     --close
