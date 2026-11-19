@@ -84,11 +84,18 @@ test_submission_single(){
   fi
 
   ./TRIKStudio/bin/2D-model "${TWOD_MODEL_OPTS[@]}" "$TMP_SUBMIT"
+  TWOD_MODEL_EXIT_CODE=$?
 
   if [ -d "/video" ]; then
     echo "q" >> stop
     wait "$FFMPEG_PID"
     rm stop
+  fi
+
+  # 2D-model exits with 1 when the program ends with an error, so only a signal (code 128 + N) means a crash.
+  if [ "$TWOD_MODEL_EXIT_CODE" -ge 128 ]; then
+    echo "2D-model crashed for field ${FIELD_NAME} with exit code ${TWOD_MODEL_EXIT_CODE}: ${TWOD_MODEL_OPTS[*]} $TMP_SUBMIT" >&2
+    exit 4
   fi
 
   rm -f "$TMP_SUBMIT"
