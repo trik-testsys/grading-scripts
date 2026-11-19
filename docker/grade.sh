@@ -38,6 +38,13 @@ test_submission_single(){
 
   ./TRIKStudio/bin/patcher "${PATCHER_OPTS[@]}" "$TMP_SUBMIT"
   PATCHER_EXIT_CODE=$?
+  # Patcher returns 1, 2 or 255 (-1) for its own errors and crashes with a signal (code 128 + N) on a save file
+  # it cannot open; in py and js modes it opens /empty.qrs of the image, so only a crash in qrs mode means
+  # a broken submission.
+  if [ "$MODE" = "qrs" ] && [ "$PATCHER_EXIT_CODE" -gt 128 ] && [ "$PATCHER_EXIT_CODE" -lt 255 ]; then
+    echo "Submission cannot be opened for field ${FIELD_NAME}: patcher exit code ${PATCHER_EXIT_CODE}" >&2
+    exit 5
+  fi
   if [ "$PATCHER_EXIT_CODE" -ne 0 ]; then
     echo "Patcher failed for field ${FIELD_NAME} with exit code ${PATCHER_EXIT_CODE}: ${PATCHER_OPTS[*]} $TMP_SUBMIT" >&2
     exit 3
@@ -68,7 +75,7 @@ test_submission_single(){
 
   if [ -d "/video" ]; then
     touch stop
-    ffmpeg -video_size 1024x768 -framerate 24 -f x11grab -i "$DISPLAY" -pix_fmt yuv420p -draw_mouse 0 "/video/${FIELD_NAME}.mp4" < stop &
+    ffmpeg -hide_banner -loglevel error -nostats -video_size 1024x768 -framerate 24 -f x11grab -i "$DISPLAY" -pix_fmt yuv420p -draw_mouse 0 "/video/${FIELD_NAME}.mp4" < stop &
     FFMPEG_PID=$!
   else
     TWOD_MODEL_OPTS=(
@@ -84,11 +91,18 @@ test_submission_single(){
   fi
 
   ./TRIKStudio/bin/2D-model "${TWOD_MODEL_OPTS[@]}" "$TMP_SUBMIT"
+  TWOD_MODEL_EXIT_CODE=$?
 
   if [ -d "/video" ]; then
     echo "q" >> stop
     wait "$FFMPEG_PID"
     rm stop
+  fi
+
+  # 2D-model exits with 1 when the program ends with an error, so only a signal (code 128 + N) means a crash.
+  if [ "$TWOD_MODEL_EXIT_CODE" -ge 128 ]; then
+    echo "2D-model crashed for field ${FIELD_NAME} with exit code ${TWOD_MODEL_EXIT_CODE}: ${TWOD_MODEL_OPTS[*]} $TMP_SUBMIT" >&2
+    exit 4
   fi
 
   rm -f "$TMP_SUBMIT"
