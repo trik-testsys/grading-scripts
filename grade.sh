@@ -11,8 +11,10 @@ run_docker_grade() {
     docker run "$@" /bin/bash /grade.sh > /dev/null
   fi
 
-  if [ ! $? -eq 0 ]; then
-    exit 1
+  # The exit code of the container tells grading failures apart, see "Коды завершения" in README.md.
+  GRADE_EXIT_CODE=$?
+  if [ "$GRADE_EXIT_CODE" -ne 0 ]; then
+    exit "$GRADE_EXIT_CODE"
   fi
 }
 

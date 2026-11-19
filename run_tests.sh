@@ -80,6 +80,39 @@ run_task() {
   done
 }
 
+# Fields of a failure case without its own fields directory
+FAILURE_FIELDS_DIRECTORY="./examples/straight_line/fields"
+
+run_failure_case() {
+  CASE_DIRECTORY=$1
+  CASE_NAME=$(basename "$CASE_DIRECTORY")
+  EXPECTED_EXIT_CODE=$(cat "$CASE_DIRECTORY/expected_exit_code.txt")
+
+  echo "Start testing failure $CASE_NAME"
+
+  FIELDS_DIRECTORY="$CASE_DIRECTORY/fields"
+  if ! [ -d "$FIELDS_DIRECTORY" ]; then
+    FIELDS_DIRECTORY="$FAILURE_FIELDS_DIRECTORY"
+  fi
+
+  RESULTS_DIR="./results/failures/$CASE_NAME"
+  mkdir -p "$RESULTS_DIR"
+
+  ./grade.sh \
+    --mode qrs \
+    --submission-file "$CASE_DIRECTORY/submission.qrs" \
+    --fields-directory "$FIELDS_DIRECTORY" \
+    --video-directory "$RESULTS_DIR" \
+    --result-directory "$RESULTS_DIR" \
+    --image "$IMAGE"
+  ACTUAL_EXIT_CODE=$?
+
+  echo "Exit code of $CASE_NAME: expected $EXPECTED_EXIT_CODE, actual $ACTUAL_EXIT_CODE"
+  if [ "$ACTUAL_EXIT_CODE" -ne "$EXPECTED_EXIT_CODE" ]; then
+    exit_and_clear 1
+  fi
+}
+
 if [[ -z "${IMAGE}" ]]; then
   echo "IMAGE env var undefined"
   exit_and_clear 1
@@ -91,6 +124,11 @@ echo "Run test for image $IMAGE"
 for task in ./examples/*;
 do
   run_task "$task"
+done
+
+for failure_case in ./failures/*;
+do
+  run_failure_case "$failure_case"
 done
 
 exit_and_clear 0
