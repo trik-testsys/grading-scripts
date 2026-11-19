@@ -38,6 +38,13 @@ test_submission_single(){
 
   ./TRIKStudio/bin/patcher "${PATCHER_OPTS[@]}" "$TMP_SUBMIT"
   PATCHER_EXIT_CODE=$?
+  # Patcher returns 1, 2 or 255 (-1) for its own errors and crashes with a signal (code 128 + N) on a save file
+  # it cannot open; in py and js modes it opens /empty.qrs of the image, so only a crash in qrs mode means
+  # a broken submission.
+  if [ "$MODE" = "qrs" ] && [ "$PATCHER_EXIT_CODE" -gt 128 ] && [ "$PATCHER_EXIT_CODE" -lt 255 ]; then
+    echo "Submission cannot be opened for field ${FIELD_NAME}: patcher exit code ${PATCHER_EXIT_CODE}" >&2
+    exit 5
+  fi
   if [ "$PATCHER_EXIT_CODE" -ne 0 ]; then
     echo "Patcher failed for field ${FIELD_NAME} with exit code ${PATCHER_EXIT_CODE}: ${PATCHER_OPTS[*]} $TMP_SUBMIT" >&2
     exit 3
